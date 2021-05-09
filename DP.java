@@ -29,4 +29,170 @@ public class DP1{
 			dp[n] = ans;
 			}
 		}
+
+
+
+		//print maze path
+		TC is 3(n+m) raised to n + m
+		public static int mazepathR(int sr, int sc, int er, int ec){
+			if(sr == er && sc == ec) return 1;
+
+			int count = 0;
+
+			if(sc+1 <= ec){
+			count += mazepathR(sr,sc+1,er,ec);
+			}
+			if(sr+1 <= er){
+			count += mazepathR(sr + 1, sc,er,ec);
+			}
+			if(sr + 1 <= er && sc + 1 <= ec)
+			count += mazepathR(sr+1,sc+1,er,ec);
+
+			return count;
+		}
+
+		public static int mazepathM(int sr, int sc, int er, int ec, int[][] dp){
+			if(sr == er && sc == ec) return dp[sr][sc] = 1;
+
+			int count = 0;
+
+			if(dp[sr][sc] != 0) return dp[sr][sc];
+
+			if(sc+1 <= ec){
+			count += mazepathR(sr,sc+1,er,ec);
+			}
+			if(sr+1 <= er){
+			count += mazepathR(sr + 1, sc,er,ec);
+			}
+			if(sr + 1 <= er && sc + 1 <= ec)
+			count += mazepathR(sr+1,sc+1,er,ec);
+
+			dp[sr][sc] = count;
+		}
+
+
+		Tc is (n+m)n square
+		public static int mazepathT(int SR, int SC, int er, int ec, int[][] dp){
+			for(int sr = er; sr>=0; sr--){
+				for int sc = ec; sc>=0; sc--{
+					if(sr == er && sc == ec) {
+						dp[sr][sc] = 1;
+						continue;
+					}
+
+					int count = 0;
+
+					if(sc+1 <= ec){
+					count += dp[sr][sc+1];//mazepathR(sr,sc+1,er,ec);
+					}
+					if(sr+1 <= er){
+					count += dp[sr+1][sc+1];//mazepathR(sr + 1, sc,er,ec);
+					}
+					if(sr + 1 <= er && sc + 1 <= ec)
+					count += dp[sr+1][sc+1];//mazepathR(sr+1,sc+1,er,ec);
+
+					dp[sr][sc] = count;
+				}
+			}
+			return [SR][SC];
+		}
+
+		//print maze path with jumps
+		public static int mazepathjumpsR(int sr, int sc, int er, int ec){
+			if(sr == er && sc == ec) return 1;
+
+			int count = 0;
+
+			for(int jumps = 1; sc + jumps <= ec; jumps++){
+			count += mazepathR(sr,sc+1,er,ec);
+			}
+			for(int jumps = 1; sr + jumps <= er; jumps++){
+			count += mazepathR(sr + 1, sc,er,ec);
+			}
+			for(int jumps = 1; sc + jumps <= ec && sr + jumps <= er; jumps++)
+			count += mazepathR(sr+1,sc+1,er,ec);
+
+			return count;
+		}
+
+		public static int mazepathjumpsM(int sr, int sc, int er, int ec, int[][] dp){
+			if(sr == er && sc == ec) return dp[sr][sc] = 1;
+
+			if(dp[sr][sc] != 0) return dp[sr][sc];  
+			int count = 0;
+			for(int jumps = 1; sc + jumps <= ec; jumps++){
+			count += mazepathR(sr,sc+jumps,er,ec,dp);
+			}
+			for(int jumps = 1; sr + jumps <= er; jumps++){
+			count += mazepathR(sr + jumps, sc,er,ec,dp);
+			}
+			for(int jumps = 1; sc + jumps <= ec && sr + jumps <= er; jumps++)
+			count += mazepathR(sr+jumps,sc+jumps,er,ec,dp);
+
+			return dp[sr][sc] = count;
+		}
+
+		public static int mazepathjumpsT(int SR, int SC, int er, int ec, int[][] dp){
+			for(int sr = er; sr>=0; sr--){
+				for(int sc = ec; sc>=0; sc--){
+					if(sr == er && sc == ec) {
+						dp[sr][sc] = 1;
+						continue;
+						}
+ 
+					int count = 0;
+					for(int jumps = 1; sc + jumps <= ec; jumps++){
+					count += dp[sr][sc+jumps];//mazepathR(sr,sc+jumps,er,ec,dp);
+					}
+					for(int jumps = 1; sr + jumps <= er; jumps++){
+					count += dp[sr+jumps][sc];//mazepathR(sr + jumps, sc,er,ec,dp);
+					}
+					for(int jumps = 1; sc + jumps <= ec && sr + jumps <= er; jumps++)
+					count += dp[sr+jumps][sc+jumps];//mazepathR(sr+jumps,sc+jumps,er,ec,dp);
+
+					dp[sr][sc] = count;
+				}
+			}
+			return dp[SR][SC];
+		}
+
+
+		//dice -- boardpath
+		public static int boardR(int sp, int ep){
+			if(sp == ep) return 1;
+			int count = 0;
+			for(int dice = 1; dice<=6 && sp + dice <= ep; dice++){
+				count += board(sp + dice,ep);
+			}
+			return count;
+		}
+
+		public static int boardM(int sp, int ep, int[]dp){
+			if(sp == ep) return dp[sp] = 1;
+			int count = 0;
+			if(dp[sp] != 0) return dp[sp];
+			for(int dice = 1; dice<=6 && sp + dice <= ep; dice++){
+				count += board(sp + dice,ep,dp);
+			}
+			return dp[sp] = count;
+		}
+
+		TC - 6 n
+		public static int boardT(int SP, int ep, int[]dp){
+			for(int sp = ep; sp>=0; sp--){
+					if(sp == ep) {
+						dp[sp] = 1;
+						continue;
+					}
+					int count = 0;
+					
+					for(int dice = 1; dice<=6 && sp + dice <= ep; dice++){
+						count += dp[sp + dice];//board(sp + dice,ep,dp);
+					}
+					dp[sp] = count;
+			}
+			return dp[SP];
+		}
+
+		//optimisation - 
 }
