@@ -195,4 +195,71 @@ public class DP1{
 		}
 
 		//optimisation - 
+
+
+		LC - 70 Climbing Stairs
+
+		//TLE
+		public int climbStairsR(int n) {
+        	return helpme(n,0);
+	    }
+	    
+	    public int helpme(int n, int s){
+	        if(s==n) return 1;
+	        
+	        int ans = 0;
+	        if(s + 1 <= n){
+	            ans+= helpme(n,s+1);
+	        }
+	        if(s + 2 <= n){
+	            ans+= helpme(n,s+2);
+	        }
+	        return ans;
+	    }
+
+
+	    //passed
+	    public int climbStairsM(int n) {
+        	return helpme(n,0,new int[n+1]);
+	    }
+	    
+	    public int helpme(int n, int s,int []dp){
+	        if(s==n) return dp [s] = 1;
+	        
+	        int ans = 0;
+	        if(dp[s] != 0) return dp[s];
+	        if(s + 1 <= n){
+	            ans+= helpme(n,s+1,dp);
+	        }
+	        if(s + 2 <= n){
+	            ans+= helpme(n,s+2,dp);
+	        }
+	        return dp[s] = ans;
+	    }
+
+	    //passed
+	    public int climbStairsT(int n) {
+        	return helpme(n,0,new int[n+1]);
+	    }
+	    
+	    public int helpme(int n, int S,int []dp){
+	    	for(int s = n; s>= 0; s--){
+	        if(s==n) {
+	        	dp [s] = 1;
+	        	continue;
+	        }
+
+	        int ans = 0;
+	        if(s + 1 <= n){
+	            ans+= dp[s+1];//helpme(n,s+1,dp);
+	        }
+	        if(s + 2 <= n){
+	            ans+= dp[s+2];//helpme(n,s+2,dp);
+	        }
+	        dp[s] = ans;
+	    	}
+	    	return dp[0];
+		}
+
+
 }
