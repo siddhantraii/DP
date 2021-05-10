@@ -17,7 +17,7 @@ public class DP1{
 	return dp[n] = ans;
 	}
 
-	public static int fiboM(int N, int[] dp){
+	public static int fiboT(int N, int[] dp){
 		for(int n = 0; n<=N; n++){
 			if(n<=1){
 				dp[n] = n;
@@ -28,6 +28,7 @@ public class DP1{
 
 			dp[n] = ans;
 			}
+			return dp[N];
 		}
 
 
@@ -196,7 +197,7 @@ public class DP1{
 
 		//optimisation - 
 
-
+//_________________________________________________________________________________________________________________________
 		LC - 70 Climbing Stairs
 
 		//TLE
@@ -261,5 +262,191 @@ public class DP1{
 	    	return dp[0];
 		}
 
+//LC - 746__________________________________________________________________________________________________________
+		public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        return minCost(cost,n);
+   		}
+    
+    	//recursive TLE
+	    public int minCostR(int [] cost, int dest){
+        if(dest <= 1) return cost[dest];
+        
+        int mincost = 0;
+        
+        mincost += Math.min(minCostR(cost,dest - 1),minCostR(cost,dest - 2)) + (dest == cost.length ? 0 : cost[dest]);
+        
+        return mincost;
+    	}
+
+    	//memoised ACCEPTED
+    	public int minCostM(int [] cost, int dest,int [] dp){
+        if(dest <= 1) return dp[dest] = cost[dest];
+        
+        int mincost = 0;
+
+  		if(dp[dest] != -1) return dp[dest];
+
+        mincost += Math.min(minCostM(cost,dest - 1,dp),minCostM(cost,dest - 2,dp)) + (dest == cost.length ? 0 : cost[dest]);
+        
+        return dp[dest] = mincost;
+    	}
+
+    	//tabulated ACCEPTED
+    	public int minCostT(int [] cost, int dest,int [] dp){
+    		for(int d = 0; d <= dest; d++){
+    			if(d <= 1) {
+    				dp[d] = cost[d];
+    				continue;
+        		}
+		        int mincost = 0;
+		        mincost += Math.min(dp[d-1],dp[d-2]) + (d == dest ? 0 : cost[d]);
+		        dp[d] = mincost;
+    		}
+        	return dp[dest];
+    	}
+
+    	//friends pairing GFG __________________________________________________________________________________________________________
+    	// 1 - Recursive
+    	public long countFriendsPairingsR(int n) 
+	    { 
+	       if(n<=1) return 1;
+	        
+	        long single = countFriendsPairings(n-1);
+	        long pair = countFriendsPairings(n-2) * (n-1);
+	        
+	        return single + pair;
+	    }
+
+	    //2 - Memoised PASSED
+	    public long countFriendsPairingsM(int n, long[] dp) 
+	    { 
+	       if(n<=1) {
+	       	return dp[n] = 1;
+	        }
+
+	        if(dp[n] != 0) return dp[n];
+
+	        long single = countFriendsPairingsM(n-1,dp);
+	        long pair = countFriendsPairingsM(n-2,dp) * (n-1);
+	        
+	        return dp[n] = (single % mod + pair % mod) % mod;
+	    }
+
+
+	    //3 - tabulated PASSED
+	    public long countFriendsPairingsT(int N, long[] dp) 
+	    { 
+	    	for(int n = 0; i<=N; i++){
+		        if(n<=1) {
+		       	dp[n] = 1;
+		       	continue;
+		        }
+
+		        if(dp[n] != 0) return dp[n];
+
+		        long single = dp[n-1];//countFriendsPairingsR(n-1,dp);
+		        long pair = dp[n-2] * (n-1);//countFriendsPairingsR(n-2,dp) * (n-1);
+		        
+		        dp[n] = (single % mod + pair % mod) % mod;
+	    	}
+	    	return dp[N];
+	    }
+
+	    //to print all substrings
+	    public static long printFriendsPairing(String friends, String ans) {
+        if (friends.length() == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        char ch = friends.charAt(0);
+        long count = 0;
+        count += printFriendsPairing(friends.substring(1), ans + ch + " ");
+        for (int i = 1; i < friends.length(); i++) {
+            String rstr = friends.substring(1, i) + friends.substring(i + 1);
+            count += printFriendsPairing(rstr, ans + ch + friends.charAt(i) + " ");
+        }
+
+        return count;
+    }
+
+//Goldmine GFG___________________________________________________________________________________________________________________________________
+    	static int maxGold(int n, int m, int M[][])
+    {
+       int[][] dp = new int[n][m];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+
+        int maxGold = 0;
+        for (int i = 0; i < n; i++) {
+            maxGold = Math.max(maxGold, helpM(i, 0, M, dp, dir));
+        }
+        return maxGold;
+    }
+    
+    static int helpM(int n, int m, int M[][], int[][] dp, int[][] dir){
+        if(m == M[0].length-1){
+            return dp[n][m] = M[n][m];
+        }
+        
+        if(dp[n][m] != -1) return dp[n][m];
+        
+        int ans = 0;
+        for(int i = 0; i<dir.length; i++){
+            int x = n + dir[i][0];
+            int y = m + dir[i][1];
+            
+            if(x >=0 && x< M.length && y<M[0].length && y>=0){
+                ans = Math.max(ans,helpM(x,y,M,dp,dir));
+            }
+        }
+        return dp[n][m] = ans + M[n][m];
+    }
+======================================= DP solution
+    static int maxGold(int n, int m, int M[][])
+    {
+        int[][] dp = new int[n][m];
+        for (int[] d : dp){
+            Arrays.fill(d, -1);
+        }
+        int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+
+        help(M,dp,dir);
+        
+        int maxGold = 0;
+        for (int i = 0; i < M.length; i++) {
+            maxGold = Math.max(maxGold, dp[i][0]);
+        }
+        return maxGold;
+    }
+    
+    static int help(int M[][], int[][] dp, int[][] dir){
+        for(int m = M[0].length - 1; m>=0; m--){
+        for(int n = M.length - 1; n>=0; n--){
+            
+            if(m == M[0].length-1){
+                dp[n][m] = M[n][m];
+                continue;
+            }
+        
+        int ans = 0;
+        for(int i = 0; i<dir.length; i++){
+            int x = n + dir[i][0];
+            int y = m + dir[i][1];
+                
+            if(x >=0 && x< M.length){
+                ans = Math.max(ans,dp[x][y]);
+            }
+        }
+            dp[n][m] = ans + M[n][m];
+        }
+    }
+    
+    return dp[0][0];
+    }
+    }
 
 }
