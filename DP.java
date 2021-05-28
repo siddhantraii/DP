@@ -68,7 +68,7 @@ public class DP1{
 			if(sr + 1 <= er && sc + 1 <= ec)
 			count += mazepathR(sr+1,sc+1,er,ec);
 
-			dp[sr][sc] = count;
+			return dp[sr][sc] = count;
 		}
 
 
